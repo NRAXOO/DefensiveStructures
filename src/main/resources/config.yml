@@ -1,0 +1,167 @@
+# ============================================================
+#  AdvancedDefensiveWalls 2.0 - Configuración
+#  Aplica los cambios con /wall reload
+#  Códigos de color con '&'.
+# ============================================================
+
+permissions:
+  admin: defensivewalls.admin   # comandos /wall (por defecto solo OP)
+  use: defensivewalls.use       # usar papel, palo, gabinete (por defecto todos)
+
+tools:
+  selector-item: PAPER          # clic derecho = menú de selección; clic izquierdo sobre una estructura = destruirla
+  builder-item: STICK           # herramienta con modos (SHIFT + clic cambia de modo)
+  range: 8.0                    # alcance de apuntado (holograma y construcción en el aire)
+  creative-free-build: true     # en creativo no se cobran materiales
+  drop-item-on-remove: true     # al eliminar con palo/papel se suelta el objeto de la estructura
+  drop-item-on-admin-remove: false
+  paper-breaks-structures: true
+  self-repair-blocks: true      # reconstruye bloques que desaparezcan por causas externas al interactuar
+  effects: true
+
+modes:
+  BUILD: "Construcción"
+  REMOVE: "Eliminación"
+  UPGRADE: "Mejora"
+  REPAIR: "Reparación"
+  INFO: "Información"
+
+# Niveles. 'material' es una categoría (WOOD, STONE, IRON) o un Material exacto (p. ej. DARK_OAK_PLANKS).
+# Ese material se usa para mantenimiento, costes de construcción y reparación.
+tiers:
+  WOOD:
+    display-name: "Madera"
+    material: WOOD
+    max-durability: 100
+    maintenance-per-minute: 0.25   # 25% de un bloque por minuto
+  STONE:
+    display-name: "Piedra"
+    material: STONE
+    max-durability: 200
+    maintenance-per-minute: 0.25
+  IRON:
+    display-name: "Hierro"
+    material: IRON
+    max-durability: 400
+    maintenance-per-minute: 0.25
+
+costs:
+  # Unidades del material del nivel necesarias al construir con el palo (los objetos de /wall give son gratis).
+  build:
+    WALL:            { WOOD: 16, STONE: 16 }
+    ROOF:            { WOOD: 9,  STONE: 9 }
+    FLOOR:           { WOOD: 9,  STONE: 9 }
+    RAMP:            { WOOD: 9,  STONE: 9 }
+    VERTICAL_STAIRS: { WOOD: 6,  STONE: 6 }
+    DOUBLE_CHEST:    { WOOD: 16 }
+    CABINET:         { WOOD: 24, STONE: 24 }   # gabinete de madera = madera, de piedra = piedra
+    IRON_DOOR:       { IRON: 12 }
+  # Coste de mejorar AL nivel indicado (modo Mejora). Por defecto 128 de madera, como en la v1.
+  upgrade:
+    restore-full-durability: true
+    STONE:
+      material: WOOD
+      amount: 128
+  # Cada clic en modo Reparación consume 'units' y recupera 'restore' puntos de durabilidad.
+  repair:
+    WOOD:  { units: 1, restore: 10 }
+    STONE: { units: 1, restore: 10 }
+    IRON:  { units: 1, restore: 20 }
+
+pickaxe:
+  damage: 1                    # durabilidad perdida por golpe válido
+  hit-cooldown-ticks: 10       # mínimo entre golpes del mismo jugador
+  allow-creative: false        # en creativo no se daña ni se rompe
+  damage-per-tool:             # ampliable: dano distinto por tipo de pico (futuras velocidades)
+    WOODEN_PICKAXE: 1
+    STONE_PICKAXE: 1
+    IRON_PICKAXE: 1
+    GOLDEN_PICKAXE: 1
+    DIAMOND_PICKAXE: 1
+    NETHERITE_PICKAXE: 1
+
+deterioration:
+  enabled: true
+  tick-seconds: 20             # frecuencia del proceso de mantenimiento
+  damage-per-minute: 1.0       # durabilidad perdida por minuto sin mantenimiento
+  speed-multiplier: 1.0        # multiplicador de la velocidad de deterioro
+  only-loaded-chunks: true
+
+cabinets:
+  association-radius: 16.0     # radio para vincular estructuras a un gabinete
+  max-structures: 64
+  require-cabinet-to-build: true   # techos/escaleras/muros/suelos exigen un gabinete cercano
+
+structures:
+  iron-door:
+    support-material: STONE_BRICKS
+
+holograms:
+  enabled: true
+  view-distance: 5.0
+  check-ticks: 20
+  interact-seconds: 8
+  icon: "🛡"
+  lines:
+    - "&6{icon} {name}"
+    - "&7Durabilidad: &f{durability}/{max}"
+    - "&7Estado: {state_color}{state}"
+    - "{extra}"
+
+particles:
+  enabled: true
+  update-ticks: 5
+  validation-cache-ms: 1000
+  check-protection: true       # puede generar eventos de prueba visibles para plugins de registro; desactívalo si molesta
+  show-reason: true            # muestra en la barra de acción por qué una ubicación es inválida
+  max-points: 160
+  spacing: 0.5
+  valid-color: "55FF55"
+  invalid-color: "FF3333"
+
+items:
+  name-format: "&6%name%"
+  lore:
+    - "&7Estructura defensiva: &f%name%"
+    - "&7Durabilidad máxima: &f%max%"
+    - "&eColócala como un bloque."
+  materials: {}                # ej: WALL_WOOD: OAK_PLANKS
+
+messages:
+  prefix: "&8[&6Muros&8] &7"
+  no-permission: "&cNo tienes permiso para usar este comando."
+  usage: "&eUso: &f/wall give <tipo> [cantidad] [jugador] &7| &f/wall reload|remove|info|maintenance|cabinet|repair"
+  player-only: "&cEste comando solo puede ser usado por un jugador."
+  unknown-type: "&cTipo desconocido. Ej: muro_madera, techo_piedra, escalera_vertical_madera, cofre, gabinete_madera, puerta."
+  invalid-amount: "&cLa cantidad debe ser un número entre 1 y 64."
+  player-not-found: "&cJugador no encontrado."
+  give-success: "&aEntregado &f%amount%x %structure% &aa &f%player%&a."
+  reloaded: "&aConfiguración recargada. Estructuras: &f%structures%&a. Bloques reparados: &f%repaired%&a."
+  removed: "&a%structure% eliminada."
+  no-target: "&cNo hay ninguna estructura en el objetivo."
+  mode-changed: "&6[MODO] &e%mode% &7seleccionado."
+  no-selection: "&cPrimero elige una estructura con el papel (clic derecho)."
+  selected: "&aEstructura seleccionada: &f%structure%&a."
+  built: "&a%structure% construida."
+  no-space: "&cNo hay espacio suficiente para la estructura."
+  no-room-height: "&cNo se puede construir a esta altura."
+  entity-in-way: "&cHay una entidad en el camino."
+  protected-area: "&cNo puedes construir/modificar en esta zona."
+  need-cabinet: "&cNecesitas un gabinete de mantenimiento cerca (radio configurable)."
+  need-ground: "&cLa puerta necesita un bloque sólido debajo."
+  invalid-option: "&cEsa estructura no está disponible."
+  internal-error: "&cOcurrió un error al construir; no se consumió nada."
+  no-materials: "&cNecesitas &f%amount% &cde %material% (tienes &f%have%&c)."
+  structure-destroyed: "&c%structure% ha sido destruida."
+  need-break-item: "&cUsa un pico para dañarla o papel para destruirla."
+  creative-no-damage: "&eEn creativo las estructuras no reciben daño."
+  upgraded: "&a¡%structure% mejorada a %tier%!"
+  upgrade-max: "&eEsta estructura ya está al nivel máximo."
+  repaired: "&a%structure% reparada: &f%durability%/%max%&a."
+  repair-full: "&eLa estructura ya tiene la durabilidad al máximo."
+  cabinet-linked: "&a%count% estructuras vinculadas al gabinete."
+  cabinet-none-nearby: "&eNo hay estructuras que vincular dentro del radio."
+  cabinet-not-found: "&cDebes estar mirando un gabinete de mantenimiento."
+  needs-maintenance: "&c⚠ %structure% (%pos%) necesita mantenimiento: el gabinete no tiene materiales."
+  needs-maintenance-no-cabinet: "&c⚠ %structure% (%pos%) no tiene gabinete y se está deteriorando."
+  durability-bar: "&6%structure% &7- Durabilidad: &f%durability%/%max% &7(%state%)"

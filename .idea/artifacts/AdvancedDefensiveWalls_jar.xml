@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="AdvancedDefensiveWalls:jar">
+    <output-path>$USER_HOME$/Servidores/plugins</output-path>
+    <root id="archive" name="AdvancedDefensiveWalls.jar">
+      <element id="module-output" name="AdvancedDefensiveWalls" />
+    </root>
+  </artifact>
+</component>

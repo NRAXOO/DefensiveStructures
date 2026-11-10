@@ -1,0 +1,20 @@
+name: AdvancedDefensiveWalls
+version: '${project.version}'
+main: com.example.defensivewalls.DefensiveWallsPlugin
+api-version: '1.21'
+description: Estructuras defensivas modulares con durabilidad y mantenimiento.
+authors: [AdvancedDefensiveWalls]
+
+commands:
+  wall:
+    description: Administra las estructuras defensivas.
+    usage: /wall <give|reload|remove|info|maintenance|cabinet|repair>
+    aliases: [muro]
+
+permissions:
+  defensivewalls.admin:
+    description: Permite usar los comandos administrativos de /wall.
+    default: op
+  defensivewalls.use:
+    description: Permite usar el papel y el palo de construccion y el gabinete.
+    default: true
